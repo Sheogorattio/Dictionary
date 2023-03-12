@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Dictionary
 {
-    public class Dictionary:IAddWord, IPrint,IDelete
+    public class Dictionary:IAddWord, IPrint,IDelete,ISearch
     {
         string dictType;//english-russian
         public string DictType { get { return dictType; } }
@@ -33,6 +33,16 @@ namespace Dictionary
 
         public void Add(string word, string translation)
         {
+            switch (dictType)
+            {
+                case "e-r":
+                    if (!(((word[0] >= 97 && word[0] <= 122) || (word[0] >= 65 && word[0] <= 90)) && (translation[0] >= 191 && translation[0] <= 255))) throw new Exception("Wrong langauge");
+                    break;
+                case "r-e":
+                    if (!((word[0]>=191 && word[0]<=255) && ((translation[0]>=97 && translation[0]<= 122) || (translation[0]>=65 && translation[0]<=90)))) throw new Exception("Wrong langauge");
+                    break;
+            }
+          
             if(words.ContainsKey(word)) //add one more translation
             {
                 string[] translations = words[word];
@@ -63,7 +73,24 @@ namespace Dictionary
 
         public void DeleteTranslation(string word, string translation)
         {
-            throw new NotImplementedException();
+            if (words.ContainsKey(word))
+            {
+                if (words[word].Length ==1 && words[word][0].CompareTo(translation) == 0) DeleteWord(word);
+
+                string[] _translations = new string[words[word].Length-1];
+                int j = 0;
+                for(int i=0; i< _translations.Length+1; i++)//creating new translations list
+                {
+                    if (words[word][i] == translation) continue;
+                    _translations[j] = words[word][i];
+                    j++;
+                }
+                words[word] = _translations;
+            }
+            else
+            {
+                throw new Exception(("Vocabulary does not contain such word: {0}", word).ToString());
+            }
         }
 
         public void DeleteWord(string word)
@@ -74,6 +101,18 @@ namespace Dictionary
                 return;
             }
             throw new Exception(("Vocabulary does not contain such word: {0}", word).ToString());
+        }
+
+        public string[] SearchTranslation(string word)
+        {
+            if (words.ContainsKey(word))
+            {
+                return words[word];
+            }
+            else
+            {
+                throw new Exception(("SearchTranslation: Vocabulary does not contain such word: {0}", word).ToString());
+            }
         }
     }
 }

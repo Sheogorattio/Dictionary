@@ -10,12 +10,19 @@ namespace Dictionary
     {
         static void Main(string[] args)
         {
-            Dictionary dict = new Dictionary(true);
-            dict.Add("word", "слово");
-            dict.Add("robber", "вор");
-            dict.Add("robber", "бандит");
+            try
+            {
+                Dictionary dict = new Dictionary(true);
+                dict.Add("word", "слово");
+                dict.Add("robber", "вор");
+                dict.Add("robber", "бандит");
+                dict.Add("robber", "жулик");
+                dict.DeleteTranslation("robber", "вор");
+                dict.DeleteWord("word");
 
-            dict.Print();
+                dict.Print();
+            }
+            catch (Exception ex) { Console.WriteLine(ex.Message); }
             Console.Read();
         }
     }

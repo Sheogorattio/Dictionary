@@ -47,6 +47,7 @@
     <Compile Include="IAddTranslation.cs" />
     <Compile Include="IDelete.cs" />
     <Compile Include="IPrint.cs" />
+    <Compile Include="ISearch.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
