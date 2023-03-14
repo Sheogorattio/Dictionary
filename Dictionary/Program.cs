@@ -17,7 +17,7 @@ namespace Dictionary
                 dict.Add("robber", "вор");
                 dict.Add("robber", "бандит");
                 dict.Add("robber", "жулик");
-                //dict.DeleteTranslation("robber", "вор");
+                dict.DeleteTranslation("robber", "вор");
                 //dict.DeleteWord("word");
 
                 dict.Print();

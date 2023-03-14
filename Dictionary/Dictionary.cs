@@ -115,6 +115,19 @@ namespace Dictionary
                     j++;
                 }
                 words[word] = _translations;
+
+                //xml part
+                xdoc = XDocument.Load(pathXML);
+                XElement root = xdoc.Root;
+                if(root != null)
+                {
+                    var _word = root.Elements("record").FirstOrDefault(obj => obj.Attribute("word")?.Value == word)?.Elements("translation").FirstOrDefault(obj => obj.Value == translation);//translation serach
+                    if(_word != null)
+                    {
+                        _word.Remove();
+                        xdoc.Save(pathXML);
+                    }
+                }
             }
             else
             {
