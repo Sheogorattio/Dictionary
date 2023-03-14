@@ -140,9 +140,22 @@ namespace Dictionary
             if(words.ContainsKey(word))
             {
                 words.Remove(word);
+
+                //xml part
+                xdoc = XDocument.Load (pathXML);
+                XElement root = xdoc.Root;
+                if (root != null)
+                {
+                    var _word = root.Elements("record").FirstOrDefault(obj => obj.Attribute("word")?.Value == word);
+                    if(_word != null)
+                    {
+                        _word.Remove();
+                        xdoc.Save(pathXML);
+                    }
+                }
                 return;
             }
-            throw new Exception(("Vocabulary does not contain such word: {0}", word).ToString());
+            throw new Exception(("DeleteWord:Vocabulary does not contain such word: {0}", word).ToString());
         }
 
         public string[] SearchTranslation(string word)
