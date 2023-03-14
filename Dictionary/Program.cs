@@ -18,6 +18,8 @@ namespace Dictionary
                 dict.Add("robber", "бандит");
                 dict.Add("robber", "жулик");
                 dict.DeleteTranslation("robber", "вор");
+                dict.EditWord("robber", "WORD");
+                dict.EditTranslation("WORD", "жулик", "zhulik");
                 //dict.DeleteWord("word");
 
                 dict.Print();

@@ -46,6 +46,7 @@
     <Compile Include="Dictionary.cs" />
     <Compile Include="IAddTranslation.cs" />
     <Compile Include="IDelete.cs" />
+    <Compile Include="IEdit.cs" />
     <Compile Include="IPrint.cs" />
     <Compile Include="ISearch.cs" />
     <Compile Include="Program.cs" />

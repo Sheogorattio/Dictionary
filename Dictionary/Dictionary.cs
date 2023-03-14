@@ -9,7 +9,7 @@ using System.Xml.Linq;
 
 namespace Dictionary
 {
-    public class Dictionary:IAddWord, IPrint,IDelete,ISearch
+    public class Dictionary:IAddWord, IPrint,IDelete,ISearch,IEdit
     {
         string dictType;
         XDocument xdoc;
@@ -131,7 +131,7 @@ namespace Dictionary
             }
             else
             {
-                throw new Exception(("Vocabulary does not contain such word: {0}", word).ToString());
+                throw new Exception(("Vocabulary does not contain such word:    " + word));
             }
         }
 
@@ -155,7 +155,7 @@ namespace Dictionary
                 }
                 return;
             }
-            throw new Exception(("DeleteWord:Vocabulary does not contain such word: {0}", word).ToString());
+            throw new Exception(("DeleteWord:Vocabulary does not contain such word: " + word));
         }
 
         public string[] SearchTranslation(string word)
@@ -166,8 +166,68 @@ namespace Dictionary
             }
             else
             {
-                throw new Exception(("SearchTranslation: Vocabulary does not contain such word: {0}", word).ToString());
+                throw new Exception(("SearchTranslation: Vocabulary does not contain such word: " + word));
             }
+        }
+
+        public void EditWord(string word, string newWord)
+        {
+            if (words.ContainsKey(word))
+            {
+                words.Add(newWord, words[word]);
+                words.Remove(word);
+
+                xdoc = XDocument.Load(pathXML);
+                XElement root = xdoc.Root;
+                if (root != null)
+                {
+                    var _word = root.Elements("record").FirstOrDefault(obj => obj.Attribute("word")?.Value == word);
+                    if (_word != null)
+                    {
+                        _word.Remove();
+                    }
+                    root.Add(new XElement("record", new XAttribute("word", newWord), new XElement("translation", words[newWord][0])));
+                }
+                for (int i=1; i < words[newWord].Length; i++)
+                {
+                    XElement elem = xdoc.Element("root")?.Elements("record").FirstOrDefault(obj => obj.Attribute("word")?.Value == newWord);
+                    elem?.Add(new XElement("translation", words[newWord][i]));
+                }
+                xdoc.Save(pathXML);
+                return;
+            }
+            throw new Exception(("EditWord: Vocabulary does not contain such word "+ word));
+        }
+
+        public void EditTranslation(string word, string translation, string newTranslation)
+        {
+            if(words.ContainsKey(word))
+            {
+                for (int i = 0; i < words[word].Length; i++)
+                {
+                    if (words[word][i] == translation)
+                    {
+                        words[word][i] = newTranslation;
+                        break;
+                    }
+                }
+
+                //xml part
+                xdoc =  XDocument.Load(pathXML);
+                var _translation = xdoc.Root?.Elements("record").FirstOrDefault(obj => obj.Attribute("word").Value == word)?.Elements("translation")?.FirstOrDefault(obj=>obj.Value == translation);
+                if(_translation != null )
+                {
+                    _translation.Remove();
+                }
+                var _word = xdoc.Root?.Elements("record").FirstOrDefault(obj => obj.Attribute("word").Value == word);
+                if(_word != null)
+                {
+                    _word.Add(new XElement("translation", newTranslation));
+                }
+                xdoc.Save(pathXML);
+                return;
+            }
+            throw new Exception(("EditTranslation: Vocabulary does not contain such word " + word));
         }
     }
 }
