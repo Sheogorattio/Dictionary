@@ -104,7 +104,11 @@ namespace Dictionary
         {
             if (words.ContainsKey(word))
             {
-                if (words[word].Length ==1 && words[word][0].CompareTo(translation) == 0) DeleteWord(word);
+                if (words[word].Length == 1 && words[word][0].CompareTo(translation) == 0)
+                {
+                    DeleteWord(word);
+                    return;
+                }
 
                 string[] _translations = new string[words[word].Length-1];
                 int j = 0;

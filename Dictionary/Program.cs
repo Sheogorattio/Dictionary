@@ -192,6 +192,7 @@ namespace Dictionary
                                             }
                                         }
                                         res.Save(path);
+                                        break;
                                     }
                                     else if (chSave == "N")
                                     {
